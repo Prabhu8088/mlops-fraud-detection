@@ -1,0 +1,16 @@
+{
+  "model_name": "fraud-detection",
+  "model_version": "1.0.0",
+  "framework": "scikit-learn",
+  "model_file": "model.pkl",
+  "features": [
+    "amount",
+    "transaction_hour",
+    "merchant_category",
+    "distance_from_home",
+    "previous_transactions"
+  ],
+  "target": "fraud",
+  "accuracy": 0.82,
+  "f1_score": 0.4231
+}

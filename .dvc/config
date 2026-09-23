@@ -1,0 +1,4 @@
+[core]
+    remote = mlops-fd-demo
+['remote "mlops-fd-demo"']
+    url = s3://mlops-sagemaker-demo-bucket
