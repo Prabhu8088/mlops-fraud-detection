@@ -33,3 +33,7 @@ jobs:
       run: |
           python -c "from app.main import app; print('Application loaded successfully')"
     
+    - name: Build Docker image
+      run: |
+          docker build -t fraud-detection:latest .
+    
