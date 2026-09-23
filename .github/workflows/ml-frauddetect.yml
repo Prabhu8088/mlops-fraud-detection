@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: write  # Required to push commits
     
@@ -57,23 +57,16 @@ jobs:
         docker push \
         ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}
     
-    - name: Veirfy ECR
+    - name: Verify Kind cluster
       run: |
-        aws ecr describe-images \
-          --repository-name fraud-detection \
-          --region us-east-1 \
-          --query 'imageDetails[*].imageTags'
-    
-    - name: Install Kind
-      run: |
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-linux-amd64
-        chmod +x ./kind
-        sudo mv ./kind /usr/local/bin/kind
-
-    - name: Creating cluster using kind
-      run: |
-        kind create --name cluster mlops-demo
         kind get clusters
-        kind get nodes
+        kubectl get ns
         kubectl get nodes
+    
+    - name: Verify KServe
+      run: |
+        kubectl get pods -A
+        kubectl get crd | grep serving.kserve.io
+    
+    
     
