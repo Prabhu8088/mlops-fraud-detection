@@ -60,7 +60,8 @@ jobs:
     - name: Verify Kind cluster
       run: |
         kind get clusters
-        kubectl config get-contexts
+        kubectl config use-context churn-model
+        kubectl get nodes
     
     - name: Verify KServe
       run: |
