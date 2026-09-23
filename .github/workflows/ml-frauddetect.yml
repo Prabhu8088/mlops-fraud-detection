@@ -84,7 +84,7 @@ jobs:
         sed -i "s|IMAGE_PLACEHOLDER|${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}|g" k8s/fraud-detect-deployment.yml
         kubectl apply -f k8s/fraud-detect-deployment.yml
     
-    - name: Verify deployment
+    - name: Verify deployment status
       run: |
        kubectl get deployment fraud-detection -n mlops-fd
        kubectl get pods -l app=fraud-detection -n mlops-fd
