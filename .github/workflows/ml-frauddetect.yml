@@ -1,0 +1,35 @@
+name: Fraud Detect Pipeline
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+  train-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push commits
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}  # Use built-in token
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+          pip install -r requirements.txt
+    
+    - name: Check Python
+      run: |
+          python --version
+    
+    - name: Check application
+      run: |
+          python -c "from app.main import app; print('Application loaded successfully')"
+    
