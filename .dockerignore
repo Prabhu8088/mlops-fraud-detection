@@ -1,0 +1,12 @@
+.git
+.github
+.venv
+__pycache__
+*.pyc
+
+data/
+*.csv
+
+dvc.lock
+
+tests/__pycache__
