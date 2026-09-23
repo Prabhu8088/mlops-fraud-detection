@@ -80,7 +80,7 @@ jobs:
     
     - name: Deploy fraud detection
       run: |
-        kubectl create ns mlops-fd
+        kubectl create ns mlops-fd --dry-run=client -o yaml | kubectl apply -f -
         sed -i "s|IMAGE_PLACEHOLDER|${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}|g" k8s/fraud-detect-deployment.yml
         kubectl apply -f k8s/fraud-detect-deployment.yml
     
