@@ -35,7 +35,7 @@ jobs:
     
     - name: Build Docker image
       run: |
-          docker build -t fraud-detection:latest .
+          docker build -t fraud-detection:${{ github.run_number }} .
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -49,7 +49,7 @@ jobs:
 
     - name: Tag Docker image
       run: |
-        docker tag fraud-detection:latest \
+        docker tag fraud-detection:${{ github.run_number }} \
         ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}
 
     - name: Push Docker image
