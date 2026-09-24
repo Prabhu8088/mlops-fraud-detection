@@ -17,7 +17,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: fraud-model
-          image: IMAGE_PLACEHOLDER
+          image: 146406208958.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:23
           ports:
             - containerPort: 8080
 ---
