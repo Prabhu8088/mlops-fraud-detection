@@ -59,7 +59,7 @@ jobs:
     
     - name: Update Kubernetes manifest
       run: |
-        sed -i "s|IMAGE_PLACEHOLDER|${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}|g" k8s/fraud-detect-deployment.yml
+        sed -i "s|^[[:space:]]*image:.*| image:${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}|g" k8s/fraud-detect-deployment.yml
     
     - name: Commit image update
       run: |
