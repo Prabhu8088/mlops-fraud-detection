@@ -57,38 +57,52 @@ jobs:
         docker push \
         ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}
     
-    - name: Verify Kind cluster
-      run: |
-        kind get clusters
-        kubectl config use-context kind-churn-model
-        kubectl get nodes
-    
-    - name: Verify KServe
-      run: |
-        kubectl get pods -A
-        kubectl get crd | grep serving.kserve.io
-
-    - name: Create ECR pull secret
-      run: |
-        kubectl create ns mlops-fd --dry-run=client -o yaml | kubectl apply -f -
-        kubectl create secret docker-registry ecr-secret \
-        --namespace mlops-fd \
-        --docker-server=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com \
-        --docker-username=AWS \
-        --docker-password="$(aws ecr get-login-password --region us-east-1)" \
-        --docker-email=devops@example.com \
-        --dry-run=client \
-        -o yaml | kubectl apply -f -
-    
-    - name: Deploy fraud detection
+    - name: Update Kubernetes manifest
       run: |
         sed -i "s|IMAGE_PLACEHOLDER|${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}|g" k8s/fraud-detect-deployment.yml
-        kubectl apply -f k8s/fraud-detect-deployment.yml
     
-    - name: Verify deployment status
+    - name: Commit image update
       run: |
-       kubectl get deployment fraud-detection -n mlops-fd
-       kubectl get pods -l app=fraud-detection -n mlops-fd
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add k8s/fraud-detect-deployment.yml
+        git commit -m "Update fraud detection image to ${{ github.run_number }}" || echo "No changes to commit"
+        git push
+
+        
+    # BELOW CODE IS VIA KSERVE    
+    # - name: Verify Kind cluster
+    #   run: |
+    #     kind get clusters
+    #     kubectl config use-context kind-churn-model
+    #     kubectl get nodes
+    
+    # - name: Verify KServe
+    #   run: |
+    #     kubectl get pods -A
+    #     kubectl get crd | grep serving.kserve.io
+
+    # - name: Create ECR pull secret
+    #   run: |
+    #     kubectl create ns mlops-fd --dry-run=client -o yaml | kubectl apply -f -
+    #     kubectl create secret docker-registry ecr-secret \
+    #     --namespace mlops-fd \
+    #     --docker-server=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com \
+    #     --docker-username=AWS \
+    #     --docker-password="$(aws ecr get-login-password --region us-east-1)" \
+    #     --docker-email=devops@example.com \
+    #     --dry-run=client \
+    #     -o yaml | kubectl apply -f -
+    
+    # - name: Deploy fraud detection
+    #   run: |
+    #     sed -i "s|IMAGE_PLACEHOLDER|${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fraud-detection:${{ github.run_number }}|g" k8s/fraud-detect-deployment.yml
+    #     kubectl apply -f k8s/fraud-detect-deployment.yml
+    
+    # - name: Verify deployment status
+    #   run: |
+    #    kubectl get deployment fraud-detection -n mlops-fd
+    #    kubectl get pods -l app=fraud-detection -n mlops-fd
     
     
 

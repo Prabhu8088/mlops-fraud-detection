@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fraud-detection
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Prabhu8088/mlops-fraud-detection.git
+    targetRevision: main
+    path: k8s
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mlops-fd
+
+  syncPolicy:
+    automated:
+      enabled: true
+      prune: false
+      selfHeal: false
