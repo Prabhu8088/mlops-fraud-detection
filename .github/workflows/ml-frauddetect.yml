@@ -114,7 +114,7 @@ jobs:
     # - name: Verify deployment status
     #   run: |
     #    kubectl get deployment fraud-detection -n mlops-fd
-    #    kubectl get pods -l app=fraud-detection -n mlops-fd
+    #    kubectl get pods -l app=fraud-detection -n mlops-fd.
     
     
 
